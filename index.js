@@ -1,5 +1,6 @@
 let exp=require('express');
 const admin = require('./firebase');
+
 let app=exp();
 
 app.use(exp.urlencoded({extended:false}));
@@ -26,8 +27,12 @@ app.get("/api/all_user/:id",async function(req,res){
 
 app.post("/api/signin",async function(req,res){
     const body = req.body;
-        const docRef = await admin.firestore().collection('user_info').add(body);
+    try{ 
+      const docRef = await admin.firestore().collection('user_info').add(body);
        res.status(201).json({ message: 'Data added successfully', id: docRef.id });
+     } catch(error){
+        res.send(error);
+      }
 })
 
 app.listen(3000);
